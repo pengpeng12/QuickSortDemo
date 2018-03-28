@@ -28,15 +28,64 @@
     NSLog(@"%@",arr);
     NSLog(@"%@",[self binary_search:arr target:6]?@"YES":@"NO");
     
+    //测试在view中查找button
+    UIView *testView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *tView_1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [testView addSubview:tView_1];
+    UIView *tView_2 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [testView addSubview:tView_2];
+    UIView *tView_3 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [tView_2 addSubview:tView_3];
+    UIView *tView_4 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [tView_3 addSubview:tView_4];
+    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [tView_3 addSubview:btn];
+    [self.view addSubview:testView];
+//    [self searchButtonInView:testView];
+    [self searchButtonInViewScope:testView];
 }
+//查找一个view中的button（深度查找与广度查找）
+- (void)searchButtonInView:(UIView *)view
+{
+    NSArray *childViews = [view subviews];
+    for (UIView *child in childViews) {
+        if ([child isKindOfClass:[UIButton class]]) {
+            NSLog(@"%@",child);
+        }
+        if (child.subviews.count) {
+            [self searchButtonInView:child];
+        }
+    }
+}
+
+- (void)searchButtonInViewScope:(UIView *)view
+{
+    NSMutableArray *tempArray = [NSMutableArray array];
+    [tempArray addObject:view];
+    while (tempArray.count) {
+        UIView *firstObject = tempArray[0];
+        [tempArray removeObjectAtIndex:0];
+        
+        for (UIView * child in [firstObject subviews]) {
+            if ([child isKindOfClass:[UIButton class]]) {
+                NSLog(@"%@",child);
+            }
+            if (child.subviews.count) {
+                [tempArray addObject:child];
+            }
+        }
+        
+    }
+}
+
 - (BOOL)binary_search:(NSMutableArray *)array target:(NSInteger)item
 {
     long n = array.count;
     if(n > 0){
         long mid = n/2;
-        if([array[mid] integerValue] == item){
+        if ([array[mid] integerValue] == item) {
             return YES;
-        }else if(item < [array[mid] integerValue]){
+        }else if (item < [array[mid] integerValue]) {
             NSMutableArray *temparray = [NSMutableArray array];
             for(int i =0; i < mid; i ++){
                 [temparray addObject: array[i]];
@@ -59,7 +108,7 @@
     
     NSInteger i = low;
     NSInteger j = high;
-    if(i >= j){
+    if (i >= j) {
         return;
     }
     NSInteger key = [array[i] integerValue];
@@ -81,7 +130,7 @@
 }
 
 - (void)bubbleSort:(NSMutableArray *)array{
-    if (array == nil || array.count == 0){
+    if (array == nil || array.count == 0) {
         return;
     }
     
@@ -89,7 +138,7 @@
 //        NSLog(@"i==%d", i);
         for (int j = 0; j < array.count-1 -i; j ++) {
 //            NSLog(@"j=%d", j);
-            if (array[j] > array[j+1]){
+            if (array[j] > array[j+1]) {
                 [array exchangeObjectAtIndex:j withObjectAtIndex:j+1];
             }
         }
